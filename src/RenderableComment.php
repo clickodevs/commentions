@@ -118,9 +118,19 @@ class RenderableComment implements RenderableCommentContract, Wireable
         ];
     }
 
+    public function getAttachments(): array
+    {
+        return $this->attachments ?? [];
+    }
+
     public function hasAttachments(): bool
     {
         return ! empty($this->attachments);
+    }
+
+    public function getAttachmentCount(): int
+    {
+        return count($this->getAttachments());
     }
 
     public static function fromLivewire($value)
