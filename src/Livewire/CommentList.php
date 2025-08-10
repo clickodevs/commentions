@@ -17,6 +17,8 @@ class CommentList extends Component
     use HasPagination;
     use HasPolling;
 
+    protected $listeners = ['refreshComments' => '$refresh'];
+
     public Model $record;
 
     public function render()

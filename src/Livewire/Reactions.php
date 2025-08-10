@@ -12,6 +12,8 @@ use Livewire\Component;
 
 class Reactions extends Component
 {
+    protected $listeners = ['refreshComments' => '$refresh'];
+
     public RenderableComment $comment;
 
     public function handleReactionToggle(string $reaction): void

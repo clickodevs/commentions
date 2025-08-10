@@ -16,6 +16,8 @@ class Comment extends Component
 {
     use HasMentions;
 
+    protected $listeners = ['refreshComments' => '$refresh'];
+
     public CommentModel|RenderableComment $comment;
 
     public string $commentBody = '';
