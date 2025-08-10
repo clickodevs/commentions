@@ -199,22 +199,6 @@ class Comment extends Model implements RenderableComment
     return count($this->getAttachments());
   }
 
-  public function getFormattedFileSize(string $filePath): string
-  {
-    if (! file_exists(storage_path('app/' . $filePath))) {
-      return '0 B';
-    }
-
-    $bytes = filesize(storage_path('app/' . $filePath));
-    $units = ['B', 'KB', 'MB', 'GB', 'TB'];
-
-    for ($i = 0; $bytes >= 1024 && $i < count($units) - 1; $i++) {
-      $bytes /= 1024;
-    }
-
-    return round($bytes, 2) . ' ' . $units[$i];
-  }
-
   protected static function newFactory()
   {
     return CommentFactory::new();

@@ -60,11 +60,35 @@
 
 /* Attachment list styles */
 .comm\:attachment-item {
-  @apply comm:flex comm:items-center comm:justify-between comm:p-2 comm:bg-gray-50 comm:dark:bg-gray-800 comm:rounded-md comm:border comm:border-gray-200 comm:dark:border-gray-700 comm:transition-colors;
+  @apply comm:flex comm:items-center comm:gap-3 comm:p-3 comm:bg-gray-50 comm:dark:bg-gray-800 comm:rounded-md comm:border comm:border-gray-200 comm:dark:border-gray-700 comm:transition-colors;
 }
 
 .comm\:attachment-item:hover {
   @apply comm:bg-gray-100 comm:dark:bg-gray-700;
+}
+
+.comm\:attachment-info {
+  @apply comm:flex-1 comm:min-w-0;
+}
+
+.comm\:attachment-name {
+  @apply comm:text-sm comm:text-gray-700 comm:dark:text-gray-300 comm:truncate;
+}
+
+.comm\:attachment-size {
+  @apply comm:text-xs comm:text-gray-500 comm:dark:text-gray-400;
+}
+
+.comm\:attachment-actions {
+  @apply comm:flex comm:items-center comm:space-x-1 comm:flex-shrink-0;
+}
+
+.comm\:attachment-action {
+  @apply comm:p-1 comm:rounded comm:transition-colors;
+}
+
+.comm\:attachment-action:hover {
+  @apply comm:bg-gray-200 comm:dark:bg-gray-600;
 }
 
 /* Loading styles */

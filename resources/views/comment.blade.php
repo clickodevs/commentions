@@ -115,39 +115,57 @@
       </div>
       <div class="comm:space-y-2">
         @foreach ($comment->getAttachments() as $attachment)
-        <div class="comm:flex comm:items-center comm:justify-between comm:p-2 comm:bg-gray-50 comm:dark:bg-gray-800 comm:rounded-md comm:border comm:border-gray-200 comm:dark:border-gray-700">
-          <div class="comm:flex comm:items-center comm:space-x-2">
+        <div class="comm:flex comm:items-center comm:gap-3 comm:p-3 comm:bg-gray-50 comm:dark:bg-gray-800 comm:rounded-md comm:border comm:border-gray-200 comm:dark:border-gray-700">
+          <div class="comm:flex comm:items-center comm:space-x-2 comm:flex-1 comm:min-w-0">
             @if (in_array($attachment['mime_type'], ['image/jpeg', 'image/png', 'image/gif', 'image/webp']))
-            <svg class="comm:w-4 comm:h-4 comm:text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="comm:w-4 comm:h-4 comm:text-green-500 comm:flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
             </svg>
             @elseif (str_starts_with($attachment['mime_type'], 'video/'))
-            <svg class="comm:w-4 comm:h-4 comm:text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="comm:w-4 comm:h-4 comm:text-blue-500 comm:flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
             </svg>
             @elseif (str_starts_with($attachment['mime_type'], 'audio/'))
-            <svg class="comm:w-4 comm:h-4 comm:text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="comm:w-4 comm:h-4 comm:text-purple-500 comm:flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
             </svg>
             @else
-            <svg class="comm:w-4 comm:h-4 comm:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="comm:w-4 comm:h-4 comm:text-gray-500 comm:flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
             @endif
-            <span class="comm:text-sm comm:text-gray-700 comm:dark:text-gray-300">{{ $attachment['name'] }}</span>
-            <span class="comm:text-xs comm:text-gray-500 comm:dark:text-gray-400">
-              ({{ $comment->getFormattedFileSize($attachment['path']) }})
-            </span>
+            <div class="comm:flex-1 comm:min-w-0">
+              <div class="comm:text-sm comm:text-gray-700 comm:dark:text-gray-300 comm:truncate" title="{{ $attachment['name'] }}">
+                {{ $attachment['name'] }}
+              </div>
+              <div class="comm:text-xs comm:text-gray-500 comm:dark:text-gray-400">
+                {{ number_format(($attachment['size'] ?? 0) / 1024, 1) }} KB
+              </div>
+            </div>
           </div>
-          <a
-            href="{{ Storage::url($attachment['path']) }}"
-            download="{{ $attachment['name'] }}"
-            class="comm:text-blue-600 comm:dark:text-blue-400 hover:comm:text-blue-800 comm:dark:hover:text-blue-300 comm:text-sm comm:flex comm:items-center comm:space-x-1">
-            <svg class="comm:w-4 comm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
-            <span>Download</span>
-          </a>
+          <div class="comm:flex comm:items-center comm:space-x-1 comm:flex-shrink-0">
+            {{-- Open in new tab button --}}
+            <a
+              href="{{ Storage::url($attachment['path']) }}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="comm:text-gray-600 comm:dark:text-gray-400 hover:comm:text-gray-800 comm:dark:hover:text-gray-200 comm:p-1 comm:rounded comm:transition-colors"
+              title="Open in new tab">
+              <svg class="comm:w-4 comm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+              </svg>
+            </a>
+            {{-- Download button --}}
+            <a
+              href="{{ Storage::url($attachment['path']) }}"
+              download="{{ $attachment['name'] }}"
+              class="comm:text-blue-600 comm:dark:text-blue-400 hover:comm:text-blue-800 comm:dark:hover:text-blue-300 comm:p-1 comm:rounded comm:transition-colors"
+              title="Download">
+              <svg class="comm:w-4 comm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+            </a>
+          </div>
         </div>
         @endforeach
       </div>

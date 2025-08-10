@@ -13,6 +13,7 @@ return new class extends Migration
             $table->morphs('author');
             $table->morphs('commentable');
             $table->text('body');
+            $table->json('attachments')->nullable();
             $table->timestamps();
         });
     }

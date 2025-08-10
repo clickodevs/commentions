@@ -45,18 +45,25 @@
         @if($attachments)
         <div class="comm:space-y-2">
           @foreach($attachments as $index => $attachment)
-          <div class="comm:flex comm:items-center comm:justify-between comm:p-2 comm:bg-gray-50 comm:rounded-md">
-            <div class="comm:flex comm:items-center comm:space-x-2">
-              <svg class="comm:w-4 comm:h-4 comm:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="comm:flex comm:items-center comm:gap-3 comm:p-3 comm:bg-gray-50 comm:rounded-md comm:border comm:border-gray-200">
+            <div class="comm:flex comm:items-center comm:space-x-2 comm:flex-1 comm:min-w-0">
+              <svg class="comm:w-4 comm:h-4 comm:text-gray-500 comm:flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
               </svg>
-              <span class="comm:text-sm comm:text-gray-700">{{ $attachment->getClientOriginalName() }}</span>
-              <span class="comm:text-xs comm:text-gray-500">({{ number_format($attachment->getSize() / 1024, 1) }} KB)</span>
+              <div class="comm:flex-1 comm:min-w-0">
+                <div class="comm:text-sm comm:text-gray-700 comm:truncate" title="{{ $attachment->getClientOriginalName() }}">
+                  {{ $attachment->getClientOriginalName() }}
+                </div>
+                <div class="comm:text-xs comm:text-gray-500">
+                  {{ number_format($attachment->getSize() / 1024, 1) }} KB
+                </div>
+              </div>
             </div>
             <button
               type="button"
               wire:click="removeAttachment({{ $index }})"
-              class="comm:text-red-600 hover:comm:text-red-800 comm:text-sm">
+              class="comm:text-red-600 hover:comm:text-red-800 comm:p-1 comm:rounded comm:transition-colors comm:flex-shrink-0"
+              title="Remove file">
               <svg class="comm:w-4 comm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
