@@ -23,6 +23,8 @@ class RenderableComment implements RenderableCommentContract, Wireable
 
     protected ?string $label;
 
+    protected ?array $attachments;
+
     protected DateTime|Carbon $createdAt;
 
     protected DateTime|Carbon $updatedAt;
@@ -37,6 +39,7 @@ class RenderableComment implements RenderableCommentContract, Wireable
         bool $isComment = false,
         ?string $parsedBody = null,
         ?string $label = null,
+        ?array $attachments = null,
     ) {
         $this->isComment = $isComment;
         $this->id = $id;
@@ -47,6 +50,7 @@ class RenderableComment implements RenderableCommentContract, Wireable
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
         $this->label = $label;
+        $this->attachments = $attachments;
     }
 
     public function isComment(): bool
