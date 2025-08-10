@@ -210,7 +210,7 @@ class Comment extends Model implements RenderableComment
             ->toArray();
     }
 
-    public function formattedAttachments(): Attribute
+    protected function formattedAttachments(): Attribute
     {
         return Attribute::make(
             get: function () {
