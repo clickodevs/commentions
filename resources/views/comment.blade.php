@@ -93,7 +93,7 @@
             {{-- Display attachments --}}
             @if ($comment->hasAttachments())
                 <div class="comm:mt-3 comm:space-y-2">
-                    @if ($comment->getAttachmentCount() > 0)
+                    @if ($comment->getAttachmentCount() > 1)
                         <div class="comm:text-xs comm:text-gray-500 comm:dark:text-gray-400 comm:font-medium">
                             Attachments ({{ $comment->getAttachmentCount() }})
                         </div>
