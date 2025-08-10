@@ -3,7 +3,6 @@
 namespace Kirschbaum\Commentions\Livewire;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 use Kirschbaum\Commentions\Actions\SaveComment;
 use Kirschbaum\Commentions\Config;
 use Kirschbaum\Commentions\Livewire\Concerns\HasMentions;
@@ -16,90 +15,92 @@ use Livewire\WithFileUploads;
 
 class Comments extends Component
 {
-  use HasMentions;
-  use HasPagination;
-  use HasPolling;
-  use WithFileUploads;
+    use HasMentions;
+    use HasPagination;
+    use HasPolling;
+    use WithFileUploads;
 
-  public Model $record;
+    protected $listeners = ['refreshComments' => '$refresh'];
 
-  public string $commentBody = '';
+    public Model $record;
 
-  public array $attachments = [];
+    public string $commentBody = '';
 
-  protected $rules = [
-    'commentBody' => 'required|string',
-    'attachments.*' => 'file|max:20480', // 20MB max per file
-  ];
+    public array $attachments = [];
 
-  public function updatedAttachments()
-  {
-    $this->validate([
-      'attachments.*' => 'file|max:20480',
-    ]);
+    protected $rules = [
+        'commentBody' => 'required|string',
+        'attachments.*' => 'file|max:20480', // 20MB max per file
+    ];
 
-    // Check maximum number of files
-    if (count($this->attachments) > 5) {
-      $this->addError('attachments', 'You can upload a maximum of 5 files.');
-      $this->attachments = array_slice($this->attachments, 0, 5);
-    }
-  }
+    public function updatedAttachments()
+    {
+        $this->validate([
+            'attachments.*' => 'file|max:20480',
+        ]);
 
-  #[Renderless]
-  public function save()
-  {
-    $this->validate();
-
-    $savedAttachments = [];
-
-    // Process file uploads
-    foreach ($this->attachments as $attachment) {
-      if ($attachment) {
-        $path = $attachment->store('commentions/attachments', 'public');
-        $savedAttachments[] = [
-          'name' => $attachment->getClientOriginalName(),
-          'path' => $path,
-          'size' => $attachment->getSize(),
-          'mime_type' => $attachment->getMimeType(),
-        ];
-      }
+        // Check maximum number of files
+        if (count($this->attachments) > 5) {
+            $this->addError('attachments', 'You can upload a maximum of 5 files.');
+            $this->attachments = array_slice($this->attachments, 0, 5);
+        }
     }
 
-    SaveComment::run(
-      $this->record,
-      Config::resolveAuthenticatedUser(),
-      $this->commentBody,
-      $savedAttachments
-    );
+    #[Renderless]
+    public function save()
+    {
+        $this->validate();
 
-    $this->clear();
-    $this->dispatch('comment:saved');
-  }
+        $savedAttachments = [];
 
-  public function removeAttachment($index)
-  {
-    unset($this->attachments[$index]);
-    $this->attachments = array_values($this->attachments);
-  }
+        // Process file uploads
+        foreach ($this->attachments as $attachment) {
+            if ($attachment) {
+                $path = $attachment->store('commentions/attachments', 'public');
+                $savedAttachments[] = [
+                    'name' => $attachment->getClientOriginalName(),
+                    'path' => $path,
+                    'size' => $attachment->getSize(),
+                    'mime_type' => $attachment->getMimeType(),
+                ];
+            }
+        }
 
-  public function render()
-  {
-    return view('commentions::comments');
-  }
+        SaveComment::run(
+            $this->record,
+            Config::resolveAuthenticatedUser(),
+            $this->commentBody,
+            $savedAttachments
+        );
 
-  #[On('body:updated')]
-  #[Renderless]
-  public function updateCommentBodyContent($value): void
-  {
-    $this->commentBody = $value;
-  }
+        $this->clear();
+        $this->dispatch('comment:saved');
+    }
 
-  #[Renderless]
-  public function clear(): void
-  {
-    $this->commentBody = '';
-    $this->attachments = [];
+    public function removeAttachment($index)
+    {
+        unset($this->attachments[$index]);
+        $this->attachments = array_values($this->attachments);
+    }
 
-    $this->dispatch('comments:content:cleared');
-  }
+    public function render()
+    {
+        return view('commentions::comments');
+    }
+
+    #[On('body:updated')]
+    #[Renderless]
+    public function updateCommentBodyContent($value): void
+    {
+        $this->commentBody = $value;
+    }
+
+    #[Renderless]
+    public function clear(): void
+    {
+        $this->commentBody = '';
+        $this->attachments = [];
+
+        $this->dispatch('comments:content:cleared');
+    }
 }
