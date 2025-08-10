@@ -118,6 +118,11 @@ class RenderableComment implements RenderableCommentContract, Wireable
         ];
     }
 
+    public function hasAttachments(): bool
+    {
+        return ! empty($this->attachments);
+    }
+
     public static function fromLivewire($value)
     {
         return new static(
