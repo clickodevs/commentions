@@ -1,4 +1,4 @@
-@import "tailwindcss" source(none) prefix(comm) important;
+@import 'tailwindcss' source(none) prefix(comm) important;
 
 @source "../js/";
 @source "../views/";
@@ -7,40 +7,71 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 [x-cloak] {
-    display: none;
+  display: none;
 }
 
 .tiptap {
-    @apply comm:text-sm comm:leading-normal;
+  @apply comm:text-sm comm:leading-normal;
 }
 
 .tiptap p.is-editor-empty::before {
-    color: #adb5bd;
-    content: attr(data-placeholder);
-    float: left;
-    height: 0;
-    pointer-events: none;
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
 }
 
 .tiptap .mention {
-    @apply comm:bg-gray-200 comm:rounded comm:px-1 comm:py-0.5 comm:font-bold comm:text-blue-500;
+  @apply comm:bg-gray-200 comm:rounded comm:px-1 comm:py-0.5 comm:font-bold comm:text-blue-500;
 }
 
 .mention-suggestion {
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 5px;
-    max-height: 150px;
-    overflow-y: auto;
-    z-index: 1000;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 5px;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 1000;
 }
 
 .mention-item {
-    padding: 5px 10px;
-    cursor: pointer;
+  padding: 5px 10px;
+  cursor: pointer;
 }
 
 .mention-item:hover {
-    @apply comm:bg-gray-100;
+  @apply comm:bg-gray-100;
+}
+
+/* File upload styles */
+.comm\:file-upload-area {
+  @apply comm:border-2 comm:border-dashed comm:border-gray-300 comm:rounded-lg comm:p-4 comm:text-center comm:cursor-pointer comm:transition-colors;
+}
+
+.comm\:file-upload-area:hover {
+  @apply comm:border-gray-400 comm:bg-gray-50;
+}
+
+.comm\:file-upload-area.dragover {
+  @apply comm:border-blue-500 comm:bg-blue-50;
+}
+
+/* Attachment list styles */
+.comm\:attachment-item {
+  @apply comm:flex comm:items-center comm:justify-between comm:p-2 comm:bg-gray-50 comm:dark:bg-gray-800 comm:rounded-md comm:border comm:border-gray-200 comm:dark:border-gray-700 comm:transition-colors;
+}
+
+.comm\:attachment-item:hover {
+  @apply comm:bg-gray-100 comm:dark:bg-gray-700;
+}
+
+/* Loading styles */
+.comm\:upload-progress {
+  @apply comm:w-full comm:bg-gray-200 comm:rounded-full comm:h-2;
+}
+
+.comm\:upload-progress-bar {
+  @apply comm:bg-blue-600 comm:h-2 comm:rounded-full comm:transition-all comm:duration-300;
 }

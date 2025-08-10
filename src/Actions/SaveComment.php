@@ -12,41 +12,42 @@ use Kirschbaum\Commentions\Events\UserWasMentionedEvent;
 
 class SaveComment
 {
-    /**
-     * @throws AuthorizationException
-     */
-    public function __invoke(Model $commentable, Commenter $author, string $body): Comment
-    {
-        if ($author->cannot('create', Config::getCommentModel())) {
-            throw new AuthorizationException('Cannot create comment');
-        }
-
-        $comment = $commentable->comments()->create([
-            'body' => $body,
-            'author_id' => $author->getKey(),
-            'author_type' => $author->getMorphClass(),
-        ]);
-
-        $this->dispatchEvents($comment);
-
-        return $comment;
+  /**
+   * @throws AuthorizationException
+   */
+  public function __invoke(Model $commentable, Commenter $author, string $body, array $attachments = []): Comment
+  {
+    if ($author->cannot('create', Config::getCommentModel())) {
+      throw new AuthorizationException('Cannot create comment');
     }
 
-    protected function dispatchEvents(Comment $comment): void
-    {
-        if ($comment->wasRecentlyCreated) {
-            CommentWasCreatedEvent::dispatch($comment);
-        }
+    $comment = $commentable->comments()->create([
+      'body' => $body,
+      'author_id' => $author->getKey(),
+      'author_type' => $author->getMorphClass(),
+      'attachments' => $attachments,
+    ]);
 
-        $mentionees = $comment->getMentioned();
+    $this->dispatchEvents($comment);
 
-        $mentionees->each(function ($mentionee) use ($comment) {
-            UserWasMentionedEvent::dispatch($comment, $mentionee);
-        });
+    return $comment;
+  }
+
+  protected function dispatchEvents(Comment $comment): void
+  {
+    if ($comment->wasRecentlyCreated) {
+      CommentWasCreatedEvent::dispatch($comment);
     }
 
-    public static function run(...$args)
-    {
-        return (new static())(...$args);
-    }
+    $mentionees = $comment->getMentioned();
+
+    $mentionees->each(function ($mentionee) use ($comment) {
+      UserWasMentionedEvent::dispatch($comment, $mentionee);
+    });
+  }
+
+  public static function run(...$args)
+  {
+    return (new static())(...$args);
+  }
 }
