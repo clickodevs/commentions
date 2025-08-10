@@ -93,9 +93,11 @@
             {{-- Display attachments --}}
             @if ($comment->hasAttachments())
                 <div class="comm:mt-3 comm:space-y-2">
-                    <div class="comm:text-xs comm:text-gray-500 comm:dark:text-gray-400 comm:font-medium">
-                        Attachments ({{ $comment->getAttachmentCount() }})
-                    </div>
+                    @if ($comment->getAttachmentCount() > 0)
+                        <div class="comm:text-xs comm:text-gray-500 comm:dark:text-gray-400 comm:font-medium">
+                            Attachments ({{ $comment->getAttachmentCount() }})
+                        </div>
+                    @endif
                     <div class="comm:space-y-2">
                         @foreach ($comment->getAttachments() as $attachment)
                             <div
