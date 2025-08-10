@@ -26,8 +26,8 @@ trait HasComments
         return SaveComment::run($this, $author, $body, $attachments);
     }
 
-    public function getComments(): Collection
+    public function getComments(): ?Collection
     {
-        return $this->commentsQuery()->get();
+        return null;
     }
 }
