@@ -21,9 +21,9 @@ trait HasComments
             ->with(['author', 'reactions.reactor']);
     }
 
-    public function comment(string $body, ?Commenter $author): Comment
+    public function comment(string $body, Commenter $author, array $attachments = []): Comment
     {
-        return SaveComment::run($this, $author, $body);
+        return SaveComment::run($this, $author, $body, $attachments);
     }
 
     public function getComments(): Collection
